@@ -492,14 +492,14 @@ static const char *parse_array(cJSON *item, const char *value)
     value=skip(value+1);
     if (*value==']') return value+1;	/* empty array. */ /* 空数组，提前退出 返回value + 1 */
 
-    /* 数组中的元素作为子节点 */
+    /* 处理array中的第一个元素 */
     item->child=child=cJSON_New_Item();
     if (!item->child) return 0;		 /* memory fail */
 
     value= skip(parse_value(child, skip(value)));	/* skip any spacing, get the value. */
     if (!value) return 0;
 
-    /* 数组中的其他元素形成双向链表 */
+    /* array中剩余元素通过 prev 和 next 链接 */
     while (*value==',')
     {
         cJSON *new_item;
@@ -524,7 +524,7 @@ static char *print_array(cJSON *item, int depth, int fmt, printbuffer *p)
 {
     char **entries;
     char *out=0,*ptr,*ret;
-    int len=5;                  /* 空数组 "[]" 对应长度为5 */ 
+    int len=5;                  /* 空数组 " [ ] " \0 对应长度为5 */ 
     cJSON *child=item->child;
     int numentries=0,i=0,fail=0;    /* numentries 数组大小 */
     size_t tmplen=0;
