@@ -431,13 +431,13 @@ char *cJSON_PrintBuffered(cJSON *item,int prebuffer,int fmt)
 static const char *parse_value(cJSON *item, const char *value)
 {
     if (!value)						return 0;	/* Fail on null. */
-    if (!strncmp(value,"null",4))	{ item->type=cJSON_NULL;  return value+4; }
+    if (!strncmp(value,"null",4))	{ item->type=cJSON_NULL;  return value+4; }                 
     if (!strncmp(value,"false",5))	{ item->type=cJSON_False; return value+5; }
     if (!strncmp(value,"true",4))	{ item->type=cJSON_True; item->valueint=1;	return value+4; }
-    if (*value=='\"')				{ return parse_string(item,value); }                        /* "" 解析字符串 */
-    if (*value=='-' || (*value>='0' && *value<='9'))	{ return parse_number(item,value); }    /* 解析数字 */
-    if (*value=='[')				{ return parse_array(item,value); }                         /* [] 解析array */
-    if (*value=='{')				{ return parse_object(item,value); }                        /* 解析 对象 {{...}}  嵌套结构 */
+    if (*value=='\"')				{ return parse_string(item,value); }                            /* 解析字符串 eg. "", "abc"*/
+    if (*value=='-' || (*value>='0' && *value<='9'))	{ return parse_number(item,value); }        /* 解析数字 eg. 1, 3.14, 1.0e+1 */
+    if (*value=='[')				{ return parse_array(item,value); }                             /* 解析array eg. [1, 2, 3, 4, 5] */
+    if (*value=='{')				{ return parse_object(item,value); }                            /* 解析对象 eg. { "name" = "bill", "name" = "gates" }  */
 
     ep=value;   /* 非法的输入 */
     return 0;	/* failure. */
